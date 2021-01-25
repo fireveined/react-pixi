@@ -1,6 +1,6 @@
 {
   "name": "@inlet/react-pixi",
-  "version": "5.1.7",
+  "version": "5.1.7-fixedtypings",
   "description": "Write PixiJS applications using React declarative style.",
   "main": "index.js",
   "umd:main": "umd.js",
@@ -16,10 +16,7 @@
     "build:watch": "cross-env FORMAT=umd NODE_ENV=development rollup -c --watch",
     "build:dev": "cross-env NODE_ENV=development rollup -c",
     "build:prod": "cross-env NODE_ENV=production rollup -c",
-    "build": "rimraf ./dist && npm run build:dev && npm run build:prod",
-    "test": "jest --silent",
-    "test:watch": "jest --silent --watch",
-    "prepack": "if-env CI=true && echo \"skip build\" || (npm run test && npm run eslint && npm run build)"
+    "build": "rimraf ./dist && npm run build:dev && npm run build:prod"
   },
   "files": [
     "dist/",
@@ -141,16 +138,5 @@
         "version": "16"
       }
     }
-  },
-  "jest": {
-    "collectCoverage": false,
-    "roots": [
-      "./test"
-    ],
-    "setupFiles": [
-      "jest-webgl-canvas-mock",
-      "<rootDir>/test/bootstrap.js",
-      "<rootDir>/test/__mocks__/matchMediaMock.js"
-    ]
   }
 }

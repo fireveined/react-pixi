@@ -129,8 +129,8 @@ declare namespace _ReactPixi {
   }
 
   type InteractionEvents = {
-    [P in PIXI.InteractionEventTypes]?: (
-      event: PIXI.InteractionEvent
+    [P in PIXI.interaction.InteractionEventTypes]?: (
+      event: PIXI.interaction.InteractionEvent
     ) => void;
   };
 
@@ -161,7 +161,7 @@ declare namespace _ReactPixi {
   }>;
 
   type IBitmapText = Container<
-    PIXI.BitmapText,
+    PIXI.extras.BitmapText,
     {
       /**
        * Set the style object
@@ -170,40 +170,40 @@ declare namespace _ReactPixi {
        *
        * style={{ font: '50px Desyrel' }}
        */
-      style?: ConstructorParameters<typeof PIXI.BitmapText>[1];
+      style?: ConstructorParameters<typeof PIXI.extras.BitmapText>[1];
     }
     >;
 
-  type INineSlicePlane = Container<PIXI.NineSlicePlane, WithSource>;
+  type Iany = Container<any, WithSource>;
   type IParticleContainer = Container<
-    PIXI.ParticleContainer,
+    any,
     {
-      maxSize?: ConstructorParameters<typeof PIXI.ParticleContainer>[0];
-      properties?: ConstructorParameters<typeof PIXI.ParticleContainer>[1];
-      batchSize?: ConstructorParameters<typeof PIXI.ParticleContainer>[2];
-      autoResize?: ConstructorParameters<typeof PIXI.ParticleContainer>[3];
+      maxSize?: ConstructorParameters< any>[0];
+      properties?: ConstructorParameters< any>[1];
+      batchSize?: ConstructorParameters< any>[2];
+      autoResize?: ConstructorParameters< any>[3];
     }
     >;
 
   type ITilingSprite = Container<
-    PIXI.TilingSprite,
+    any,
     WithSource & {
     tileScale?: PointLike;
     tilePosition: PointLike;
   }
     >;
 
-  type ISimpleRope = Container<PIXI.SimpleRope, WithSource>;
+  type ISimpleRope = Container<any, WithSource>;
   type ISimpleMesh = Container<
-    PIXI.SimpleMesh,
+    any,
     WithSource & {
-    uvs?: ConstructorParameters<typeof PIXI.SimpleMesh>[2];
-    indices?: ConstructorParameters<typeof PIXI.SimpleMesh>[3];
+    uvs?: ConstructorParameters< any>[2];
+    indices?: ConstructorParameters< any>[3];
   }
     >;
 
   type IAnimatedSprite = Container<
-    PIXI.AnimatedSprite,
+    any,
     WithSource & {
     isPlaying: boolean;
     images?: string[];
@@ -312,7 +312,7 @@ export const Sprite: React.FC<_ReactPixi.ISprite>;
 export const Container: React.FC<_ReactPixi.IContainer>;
 export const Graphics: React.FC<_ReactPixi.IGraphics>;
 export const BitmapText: React.FC<_ReactPixi.IBitmapText>;
-export const NineSlicePlane: React.FC<_ReactPixi.INineSlicePlane>;
+export const any: React.FC<_ReactPixi.Iany>;
 export const ParticleContainer: React.FC<_ReactPixi.IParticleContainer>;
 export const TilingSprite: React.FC<_ReactPixi.ITilingSprite>;
 export const SimpleRope: React.FC<_ReactPixi.ISimpleRope>;
