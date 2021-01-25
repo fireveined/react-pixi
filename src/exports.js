@@ -1,5 +1,5 @@
 import { PixiComponent } from './utils/element'
-import { render } from './render'
+import { render, roots } from './render'
 import Stage from './stage'
 import { PixiFiber } from './reconciler'
 import { Context as AppContext, AppProvider, AppConsumer, withPixiApp } from './stage/provider'
@@ -28,4 +28,5 @@ export {
   withFilters,
   applyDefaultProps,
   eventHandlers,
+  roots
 }

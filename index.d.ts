@@ -326,6 +326,7 @@ export const render: (
   callback?: (...args: any) => void
 ) => any;
 
+export const roots: Map<PIXI.Container, any>;
 // context
 export const AppContext: React.Context<PIXI.Application>;
 export const AppProvider: React.ComponentType<React.ProviderProps<PIXI.Application>>;
