@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React from 'react'
 import * as PIXI from 'pixi.js'
 import renderer from 'react-test-renderer'
 import * as reactTest from '@testing-library/react'
-import { PixiFiber } from '../src/reconciler'
+import { PixiFiber } from '../src'
 import { Container, Stage, Text } from '../src'
 import { Context } from '../src/stage/provider'
-import { useTick } from '../src/hooks'
 import { getCanvasProps } from '../src/stage'
 import { mockToSpy } from './__utils__/mock'
 
@@ -169,7 +168,7 @@ describe('stage', () => {
       instance
     )
   })
-  
+
   test('call PixiFiber.updateContainer on componentDidUpdate', () => {
     const el = renderer.create(<Stage />)
 
@@ -266,150 +265,6 @@ describe('stage', () => {
     })
   })
 
-  describe('hook `useTick`', function () {
-    const App = ({ children, cb }) => {
-      const app = useRef()
-      const setApp = useCallback(_ => (app.current = _), [])
-
-      useEffect(() => {
-        cb(app.current)
-      }, [app.current])
-
-      return <Stage onMount={setApp}>{children}</Stage>
-    }
-
-    test('throw error no context found', () => {
-      const Comp = () => {
-        useTick(() => {})
-        return <Container />
-      }
-
-      const createApp = () =>
-        renderer.create(
-          <Container>
-            <Comp />
-          </Container>
-        )
-
-      expect(createApp).toThrow(
-        'No Context found with `PIXI.Application`. Make sure to wrap component with `AppProvider`'
-      )
-    })
-
-    test('mount & unmount once', () => {
-      let app
-
-      const Comp = () => {
-        useTick(() => {})
-        return <Container />
-      }
-
-      const renderStage = Comp => (
-        <Stage
-          onMount={_app => {
-            app = _app
-          }}
-        >
-          <Container>{Comp}</Container>
-        </Stage>
-      )
-
-      const render = renderer.create(renderStage())
-
-      jest.spyOn(app.ticker, 'add')
-      jest.spyOn(app.ticker, 'remove')
-
-      render.update(renderStage(<Comp />))
-      render.update(renderStage(<Comp />))
-
-      expect(app.ticker.add).toHaveBeenCalledTimes(1)
-      expect(app.ticker.remove).toHaveBeenCalledTimes(0)
-
-      render.update(renderStage())
-
-      expect(app.ticker.remove).toHaveBeenCalledTimes(1)
-    })
-
-    test('update state', () => {
-      const fn = jest.fn()
-
-      const Counter = () => {
-        const x = useRef(1)
-        useTick(() => fn(x.current++))
-        return <Container />
-      }
-
-      const render = () => (
-        <App
-          cb={app => {
-            for (let i = 0; i < 10; i++) {
-              app.ticker.update()
-            }
-          }}
-        >
-          <Counter />
-        </App>
-      )
-
-      const { rerender, unmount } = reactTest.render(render())
-      rerender(render())
-
-      unmount()
-      expect(fn.mock.calls.join(',')).toEqual('1,2,3,4,5,6,7,8,9,10')
-    })
-
-    test('enable/disable useTick', () => {
-      let fn = jest.fn()
-
-      const Counter = ({ enabled }) => {
-        const x = useRef(1)
-        useTick(() => fn(x.current++), enabled)
-        return null
-      }
-
-      const render = enabled => (
-        <App
-          cb={app => {
-            app.ticker.update()
-            app.ticker.update()
-            app.ticker.update()
-          }}
-        >
-          <Counter enabled={enabled} />
-        </App>
-      )
-
-      function testEnabled() {
-        fn.mockClear()
-        const { rerender, unmount } = reactTest.render(render(true))
-
-        reactTest.act(() => {
-          rerender(render(true))
-          rerender(render(true))
-        })
-
-        unmount()
-        expect(fn.mock.calls.join(',')).toEqual('1,2,3')
-      }
-
-      function testDisabled() {
-        fn.mockClear()
-        const { rerender, unmount } = reactTest.render(render(false))
-
-        reactTest.act(() => {
-          rerender(render(false))
-          rerender(render(false))
-        })
-
-        unmount()
-        expect(fn.mock.calls.join(',')).toEqual('')
-      }
-
-      testEnabled()
-      testDisabled()
-    })
-  })
-
   describe('resolution', () => {
     test('app.resolution fallback to devicePixelRatio', () => {
       window.devicePixelRatio = 3
@@ -419,7 +274,9 @@ describe('stage', () => {
     })
 
     test('styles on canvas should not exist if `autoDensity` is false', () => {
-      const { unmount, container } = reactTest.render(<Stage width={800} height={600} options={{ autoDensity: false }} />)
+      const { unmount, container } = reactTest.render(
+        <Stage width={800} height={600} options={{ autoDensity: false }} />
+      )
       expect(container.firstChild.getAttribute('style')).toEqual(null)
       unmount()
     })

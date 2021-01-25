@@ -1,10 +1,12 @@
 import invariant from '../utils/invariant'
 import { Application } from 'pixi.js'
-import { useEffect, useContext, useRef } from 'react'
-import { Context } from '../stage/provider'
+import { useEffect, useRef } from 'react'
+import { useApp } from './useApp'
 
 function useTick(callback, enabled = true) {
-  const app = useContext(Context)
+  const app = useApp()
+
+  invariant(typeof callback === 'function', '`useTick` needs a callback function.')
   invariant(
     app instanceof Application,
     'No Context found with `%s`. Make sure to wrap component with `%s`',
@@ -24,7 +26,9 @@ function useTick(callback, enabled = true) {
       app.ticker.add(tick)
 
       return () => {
-        app.ticker.remove(tick)
+        if (app.ticker) {
+          app.ticker.remove(tick)
+        }
       }
     }
   }, [enabled])

@@ -12,7 +12,12 @@ import { Texture } from 'pixi.js'
 
 Use `"@inlet/react-pixi/animated"` to import react-spring animated components.
 
-> Make sure to use react-spring v9+
+> Make sure to use react-spring v9+!
+>
+> When using npm you'll need to enable react-spring `sideEffects`,
+> execute the following in your CLI after installing react-spring@next and @inlet/react-pixi:
+>
+> `node ./node_modules/@inlet/react-pixi/postinstall.js`
 
 ## Usage
 
@@ -66,3 +71,15 @@ Click anywhere to animate
     return <App />;
 }}
 </Playground>
+
+## Animating `tint` values
+
+<iframe
+  height={500}
+  scrolling="no"
+  title="ReactSpring - Animating Color Values"
+  src="//codepen.io/inlet/embed/jOrpLOR/?height=300&theme-id=33987&default-tab=result&embed-version=2"
+  frameBorder="no"
+  allowFullScreen={true}
+  style={{ width: '100%' }} />
+
